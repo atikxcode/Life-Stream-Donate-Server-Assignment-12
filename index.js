@@ -27,6 +27,70 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    const districtsCollection = client.db('bloodDonate').collection('districts');
+    const upazilasCollection = client.db('bloodDonate').collection('upazilas');
+
+
+    app.get('/district',  async(req, res) => {
+      const cursor = districtsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.get('/upazilas',  async(req, res) => {
+      const cursor = upazilasCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+
+    const userCollection = client.db('bloodDonate').collection('user');
+
+
+    app.get('/user', async(req, res) => {
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.post('/user', async(req, res) => {
+      const newUser = req.body;
+      console.log(newUser);
+      const result = await userCollection.insertOne(newUser);
+      res.send(result);
+    })
+
+
+    app.put('/user/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = { upsert: true };
+      const updateUserDetails = req.body;
+      const User = {
+        $set: {
+          
+          name: updateUserDetails.name,
+          bloodgroup: updateUserDetails.bloodgroup,
+          district: updateUserDetails.district,
+          upazila: updateUserDetails.upazila,
+          image: updateUserDetails.image,
+
+          
+        }
+      }
+      
+  
+      const result = await userCollection.updateOne(filter, User, options);
+      res.send(result);
+     })
+
+
+
+    
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
