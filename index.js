@@ -3,7 +3,8 @@ const app = express();
 const cors = require('cors');
 require('dotenv').config();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
 app.use(cors());
@@ -79,11 +80,28 @@ async function run() {
           
         }
       }
-      
-  
+
       const result = await userCollection.updateOne(filter, User, options);
       res.send(result);
      })
+
+
+
+     const donationRequestCollection = client.db('bloodDonate').collection('donationRequest');
+
+     app.post('/donationrequest', async(req, res) => {
+       const donationRequest = req.body;
+       console.log(donationRequest);
+       const result = await donationRequestCollection.insertOne(donationRequest);
+       res.send(result);
+     })
+
+
+     app.get('/donationrequest', async(req, res) => {
+      const cursor = donationRequestCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
 
 
 
