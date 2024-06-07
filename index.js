@@ -103,6 +103,53 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/donationrequest/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await donationRequestCollection.findOne(query);
+      res.send(result);
+    })
+
+
+
+    app.put('/donationrequest/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = { upsert: true };
+      const updateDonationRequestDetails = req.body;
+      const DonationRequestCard = {
+        $set: {
+          requestEmail: updateDonationRequestDetails.requestEmail,
+          requestName: updateDonationRequestDetails.requestName,
+          recipientName: updateDonationRequestDetails.recipientName,
+          recipientBloodgroup: updateDonationRequestDetails.recipientBloodgroup,
+          recipientDistrict: updateDonationRequestDetails.recipientDistrict,
+          recipientUpazila: updateDonationRequestDetails.recipientUpazila,
+          hospital: updateDonationRequestDetails.hospital,
+          recipientAddress: updateDonationRequestDetails.recipientAddress,
+          donationDate: updateDonationRequestDetails.donationDate,
+          donationTime: updateDonationRequestDetails.donationTime,
+          message: updateDonationRequestDetails.message,
+          status: updateDonationRequestDetails.status,
+        }
+      }
+      
+  
+      const result = await donationRequestCollection.updateOne(filter, DonationRequestCard, options);
+      res.send(result);
+     })
+
+
+
+
+     app.delete('/donationrequest/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await donationRequestCollection.deleteOne(query);
+      res.send(result);
+    })
+
+
 
 
     
