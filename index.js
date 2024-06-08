@@ -167,8 +167,7 @@ async function run() {
           status: updateDonationRequestDetails.status,
         }
       }
-      
-  
+
       const result = await donationRequestCollection.updateOne(filter, DonationRequestCard, options);
       res.send(result);
      })
@@ -194,6 +193,46 @@ async function run() {
      })
 
 
+     app.put('/blog/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = { upsert: true };
+      const updateBlog = req.body;
+      const BlogCard = {
+        $set: {
+          title: updateBlog.title,
+          image: updateBlog.image,
+          content: updateBlog.content,
+          
+          
+        }
+      }
+
+      const result = await blogCollection.updateOne(filter, BlogCard, options);
+      res.send(result);
+     })
+
+
+     app.put('/blog/status/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = { upsert: true };
+      const updateBlog = req.body;
+      const BlogCard = {
+        $set: {
+
+          status: updateBlog.status
+
+        }
+      }
+
+      const result = await blogCollection.updateOne(filter, BlogCard, options);
+      res.send(result);
+     })
+
+
+
+
      app.get('/blog', async(req, res) => {
       const cursor = blogCollection.find();
       const result = await cursor.toArray();
@@ -206,6 +245,15 @@ async function run() {
       const result = await blogCollection.findOne(query);
       res.send(result);
     })
+
+
+    app.delete('/blog/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await blogCollection.deleteOne(query);
+      res.send(result);
+    })
+
 
 
 
