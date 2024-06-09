@@ -175,6 +175,33 @@ async function run() {
 
 
 
+
+     app.put('/donationrequest/status/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = { upsert: true };
+      const updateDonationRequestDetails = req.body;
+      const DonationRequestCard = {
+        $set: {
+          status: updateDonationRequestDetails.status,
+        }
+      }
+
+      const result = await donationRequestCollection.updateOne(filter, DonationRequestCard, options);
+      res.send(result);
+     })
+
+
+
+
+
+
+
+
+
+
+
+
      app.delete('/donationrequest/:id', async(req, res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)};
@@ -253,6 +280,25 @@ async function run() {
       const result = await blogCollection.deleteOne(query);
       res.send(result);
     })
+
+
+
+    const fundingCollection = client.db('bloodDonate').collection('funding');
+
+
+    app.get('/funding', async(req, res) => {
+      const cursor = fundingCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.post('/funding', async(req, res) => {
+      const funding = req.body;
+      console.log(funding);
+      const result = await fundingCollection.insertOne(funding);
+      res.send(result);
+    })
+
 
 
 
