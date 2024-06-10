@@ -8,7 +8,15 @@ var jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5176',
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'https://life-stream-donate-0108.netlify.app',
+    'assignment-12-server-57rdeub35-atiks-projects-ca41f1e3.vercel.app'
+  ]
+}));
 app.use(express.json());
 
 
