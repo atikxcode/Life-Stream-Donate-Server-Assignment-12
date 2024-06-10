@@ -174,6 +174,25 @@ async function run() {
 
 
 
+    app.put('/donationrequest/donor/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = { upsert: true };
+      const updateDonationRequestDetails = req.body;
+      const DonationRequestCard = {
+        $set: {
+          donorEmail: updateDonationRequestDetails.donorEmail,
+          donorName : updateDonationRequestDetails.donorName,
+          status: updateDonationRequestDetails.status
+        }
+      }
+
+      const result = await donationRequestCollection.updateOne(filter, DonationRequestCard, options);
+      res.send(result);
+     })
+
+
+
 
 
      app.put('/donationrequest/status/:id', async(req, res) => {
